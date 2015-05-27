@@ -1,46 +1,43 @@
 application:
   configuration:
-    input.image: { ami: "us-east-1/ami-bc8131d4", user: "root"}
-    input.image-hardware: m1.small
     input.instance-prefix: "kafka"
-    input.recipe-url: "https://dl.dropboxusercontent.com/u/250836/kafka.tar.gz"
-    input.quantity: 3
+    input.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-kafka-cookbooks-stable-842c877.tar.gz"
+    input.kafka-port: 9092
+    input.manager-port: 9000
+    input.manager-url: "http://qubell-starter-kit-artifacts.s3.amazonaws.com/deps/kafka/kafka-manager-1.2.3.zip"
   interfaces:
     input:
-      image: bind(kafka#input.image)
-      image-hardware: bind(kafka#input.image-hardware)
       instance-prefix: bind(kafka#input.instance-prefix)
       recipe-url: bind(kafka#input.recipe-url)
-      quantity: bind(kafka#input.quantity)
+      kafka-port: bind(kafka#input.kafka-port)
+      manager-port: bind(kafka#input.manager-port)
+      manager-url: bind(kafka#input.manager-url)
     output:
       host: bind(kafka#result.host)
       port: bind(kafka#result.port)
-  bindings: 
+      ui: bind(kafka#result.ui)
+  bindings:
     - [kafka, zookeeper]
   components:
     kafka:
       type: workflow.Instance
       interfaces:
         input:
-          image:
-            type: configuration(map<string, string>)
-            name: Compatible AMI
-            suggestions:
-              "CentOS 6.4 (us-east)": { ami: "us-east-1/ami-bc8131d4", user: "ec2-user"}
-          image-hardware:
-            type: configuration(string)
-            name: Compatible hardware
-            suggestions:
-              "2 CPU, 7.5 Gb": m3.large
           instance-prefix:
             type: configuration(string)
             name: Instance prefix
           recipe-url:
             type: configuration(string)
             name: Chef recipie URL
-          quantity:
+          kafka-port:
             type: configuration(int)
-            name: Kafka nodes quantity
+            name: Kafka service listening port
+          manager-port:
+            type: configuration(int)
+            name: Kafka web-manager port
+          manager-url:
+            type: configuration(string)
+            name: Kafka manager source URL
         zoo:
           zoo-hosts:
              type: consume-signal(list<string>)
@@ -61,27 +58,29 @@ application:
           port:
             type: publish-signal(int)
             name: Kafka port
+          ui:
+            type: publish-signal(string)
+            name: Kafka Manager web UI
       required: [zoo]
       configuration:
         configuration.workflows:
           launch:
             steps:
-              - provision:
-                  action: provisionVms
-                  parameters:
-                    hardwareId: "{$.image-hardware}"
-                    imageId: "{$.image.ami}"
-                    vmIdentity: "{$.image.user}"
-                    roleName: default
-                    targetQuantity: "{$.quantity}"
-                  output:
-                    ips: ips
-                    priv-ips: privateips
               - get-env-props:
                   action: getEnvironmentProperties
                   phase: get-env-props
                   output:
-                    props: result 
+                    props: result
+              - provision:
+                  action: provisionVms
+                  precedingPhases: [get-env-props]
+                  parameters:
+                    hardwareId: ""
+                    vmIdentity: "ec2-user"
+                    roleName: default
+                    staticIps: "{$.props.zoo.zoo-hosts}"
+                  output:
+                    ips: ips
               - deploy-kafka:
                   action: chefsolo
                   precedingPhases: [ provision ]
@@ -91,21 +90,48 @@ application:
                     recipeUrl: "{$.recipe-url}"
                     runList: [ "recipe[apache_kafka]" ]
                     jattrs:
+                      java:
+                        jdk_version: "7"
                       apache_kafka:
+                        port: "{$.kafka-port}"
                         service_style: "init"
                         "zookeeper.connect": "{$.props.zoo.zoo-urls}"
-                        "broker.id": "{$.priv-ips}"
+                        "broker.id": "{$.props.zoo.zoo-nodes}"
+              - provision-kafka-manager:
+                  action: provisionVms
+                  precedingPhases: [deploy-kafka]
+                  parameters:
+                    hardwareId: ""
+                    vmIdentity: "ec2-user"
+                    roleName: manager
+                    staticIps: ["{$.props.zoo.zoo-hosts[0]}"]
+              - deploy-kafka-manager:
+                  action: chefsolo
+                  precedingPhases: [ provision-kafka-manager ]
+                  parameters:
+                    version: "11.16.2"
+                    roles: [ default ]
+                    recipeUrl: "{$.recipe-url}"
+                    runList: [ "recipe[apache_kafka::manager]" ]
+                    jattrs:
+                      apache_kafka:
+                        "zookeeper.connect": "{$.props.zoo.zoo-urls}"
+                        manager_url: "{$.manager-url}"
+                        manager_port: "{$.manager-port}"
+
             return:
               host:
                 value: "{$.ips}"
               port:
-                value: 9092
+                value: "{$.kafka-port}"
+              ui:
+                value: "http://{$.ips[0]}:{$.manager-port}"
     zookeeper:
       type: reference.Submodule
       configuration:
-        __locator.application-id: Zookeeper
+        __locator.application-id: "Zookeeper"
       interfaces:
-        zoo: ### combined interface for actions/output pins
+        zoo:
           zoo-hosts:
              type: publish-signal(list<string>)
              name: Zoo hosts Public IPs
@@ -118,4 +144,3 @@ application:
           zoo-urls:
              type: publish-signal(list<string>)
              name: Zookeper urls (private)
-          

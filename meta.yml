@@ -1,0 +1,17 @@
+kit:
+  name: "Apache Kafka"
+  link: https://github.com/qubell-bazaar/component-kafka
+  applications:
+    - name: "Zookeeper"
+      manifest: "https://raw.github.com/qubell-bazaar/component-zookeeper-dev/backports-1/component-zookeeper-dev.yml"
+    - name: "Apache Kafka"
+      manifest: "https://raw.github.com/qubell-bazaar/component-kafka/1.0-41p/component-kafka.yml"
+  provider:
+    name: "Qubell"
+    link: http://qubell.com
+  documentation:
+    overview: |
+      This application requires the following items to be configured in your environment:
+        * CloudServers account;
+        * Ports 9000, 9092, 2181 open on the ﬁrewall.
+      Please refer to the Getting Started for step-by-step instructions on how to configure your environment.
