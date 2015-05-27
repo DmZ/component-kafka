@@ -4,7 +4,7 @@ component-kafka
 Version 1.0-41p
 ---------------
 
-<img src="https://s3.amazonaws.com/qubell-images/kafka.jpg">
+<img src="https://s3.amazonaws.com/qubell-images/kafka.png">
 
 Installs and configures Apache Kafka
 
