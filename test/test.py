@@ -14,8 +14,8 @@ class ApacheKafkaComponent(BaseComponentTestCase):
   }]
 
     @classmethod
-      def timeout(cls):
-          return 30
+    def timeout(cls):
+        return 30
 
     @instance(byApplication=name)
     def test_kafka_manager(self, instance):
