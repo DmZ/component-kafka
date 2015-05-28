@@ -103,7 +103,7 @@ application:
                     version: "11.16.2"
                     roles: [ default ]
                     recipeUrl: "{$.recipe-url}"
-                    runList: [ "recipe[apache_kafka]" ]
+                    runList: [ "recipe[cookbook-qubell-kafka_component]" ]
                     jattrs:
                       java:
                         jdk_version: "7"
@@ -127,7 +127,7 @@ application:
                     version: "11.16.2"
                     roles: [ default ]
                     recipeUrl: "{$.recipe-url}"
-                    runList: [ "recipe[apache_kafka::manager]" ]
+                    runList: [ "recipe[cookbook-qubell-kafka_component::manager]" ]
                     jattrs:
                       apache_kafka:
                         "zookeeper.connect": "{$.props.zoo.zoo-urls}"
