@@ -12,6 +12,8 @@ application:
       kafka-port: bind(kafka#input.kafka-port)
       manager-port: bind(kafka#input.manager-port)
       manager-url: bind(kafka#input.manager-url)
+    app-meta:
+      application-pic: "bind(metadata#output.application-pic)"
     output:
       host: bind(kafka#result.host)
       port: bind(kafka#result.port)
@@ -19,6 +21,19 @@ application:
   bindings:
     - [kafka, zookeeper]
   components:
+    metadata:
+      type: cobalt.common.Constants
+      interfaces:
+        output:
+          application-pic:
+            type: publish-signal(map<string, object>)
+            name: ""
+      configuration:
+        configuration.values:
+          output.application-pic:
+            large: "https://s3.amazonaws.com/qubell-images/kafka.jpg"
+            small: "https://s3.amazonaws.com/qubell-images/kafka-31%D1%8548.jpg"
+            small-height: 48
     kafka:
       type: workflow.Instance
       interfaces:
@@ -88,7 +103,7 @@ application:
                     version: "11.16.2"
                     roles: [ default ]
                     recipeUrl: "{$.recipe-url}"
-                    runList: [ "recipe[apache_kafka]" ]
+                    runList: [ "recipe[cookbook-qubell-kafka_component]" ]
                     jattrs:
                       java:
                         jdk_version: "7"
@@ -112,7 +127,7 @@ application:
                     version: "11.16.2"
                     roles: [ default ]
                     recipeUrl: "{$.recipe-url}"
-                    runList: [ "recipe[apache_kafka::manager]" ]
+                    runList: [ "recipe[cookbook-qubell-kafka_component::manager]" ]
                     jattrs:
                       apache_kafka:
                         "zookeeper.connect": "{$.props.zoo.zoo-urls}"
