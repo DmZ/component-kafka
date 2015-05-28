@@ -5,7 +5,7 @@ from qubell.api.testing import *
     "default": {}
 })
 class ApacheKafkaComponent(BaseComponentTestCase):
-    name = "Apache Kafka"
+    name = "component-kafka"
     destroy_interval = int(os.environ.get('DESTROY_INTERVAL', 1000*60*60*2))
     meta = os.path.realpath(os.path.join(os.path.dirname(__file__), '../meta.yml'))
     apps = [{
