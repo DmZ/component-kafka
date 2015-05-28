@@ -1,4 +1,5 @@
 import os
+import requests
 
 from qubell.api.testing import *
 @environment({
@@ -19,8 +20,7 @@ class ApacheKafkaComponent(BaseComponentTestCase):
 
     @instance(byApplication=name)
     def test_kafka_manager(self, instance):
-        hosts = instance.returnValues['output.ui']
-        for host in hosts:
-           resp = requests.get(host, verify=False)
-           assert resp.status_code == 200
+        host = instance.returnValues['output.ui']
+        resp = requests.get(host, verify=False)
+        assert resp.status_code == 200
 
