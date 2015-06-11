@@ -18,6 +18,8 @@ application:
       host: bind(kafka#result.host)
       port: bind(kafka#result.port)
       ui: bind(kafka#result.ui)
+    zoo:
+      '*': bind(zookeeper#zoo.*)
   bindings:
     - [kafka, zookeeper]
   components:
