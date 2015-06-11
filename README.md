@@ -1,14 +1,14 @@
 component-kafka
 ===============
 
-Version 1.0-41p
+Version 1.1-41p
 ---------------
 
 <img src="https://s3.amazonaws.com/qubell-images/kafka.png">
 
 Installs and configures Apache Kafka
 
-[![Install](https://raw.github.com/qubell-bazaar/component-skeleton/master/img/install.png)](https://express.qubell.com/applications/upload?metadataUrl=https://raw.github.com/qubell-bazaar/component-kafka/1.0-41p/meta.yml)
+[![Install](https://raw.github.com/qubell-bazaar/component-skeleton/master/img/install.png)](https://express.qubell.com/applications/upload?metadataUrl=https://raw.github.com/qubell-bazaar/component-kafka/1.1-41p/meta.yml)
 
 Features
 --------

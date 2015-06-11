@@ -5,7 +5,7 @@ kit:
     - name: "Zookeeper"
       manifest: "https://raw.github.com/qubell-bazaar/component-zookeeper-dev/1.2-41p/component-zookeeper-dev.yml"
     - name: "Apache Kafka"
-      manifest: "https://raw.github.com/qubell-bazaar/component-kafka/1.0-41p/component-kafka.yml"
+      manifest: "https://raw.github.com/qubell-bazaar/component-kafka/1.1-41p/component-kafka.yml"
   provider:
     name: "Qubell"
     link: http://qubell.com

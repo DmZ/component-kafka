@@ -1,7 +1,7 @@
 application:
   configuration:
     input.instance-prefix: "kafka"
-    input.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-kafka-cookbooks-stable-97e4cea.tar.gz"
+    input.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-kafka-cookbooks-stable-1fd5763.tar.gz"
     input.kafka-port: 9092
     input.manager-port: 9000
     input.manager-url: "http://qubell-starter-kit-artifacts.s3.amazonaws.com/deps/kafka/kafka-manager-1.2.3.zip"
