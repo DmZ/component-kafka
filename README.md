@@ -8,7 +8,7 @@ Version 1.1-41p
 
 Installs and configures Apache Kafka
 
-[![Install](https://raw.github.com/qubell-bazaar/component-skeleton/master/img/install.png)](https://express.qubell.com/applications/upload?metadataUrl=https://raw.github.com/qubell-bazaar/component-kafka/1.1-41p/meta.yml)
+[![Install](https://raw.github.com/qubell-bazaar/component-skeleton/master/img/install.png)](https://express.tonomi.com/applications/upload?metadataUrl=https://raw.github.com/qubell-bazaar/component-kafka/1.1-41p/meta.yml)
 
 Features
 --------
